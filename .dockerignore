@@ -1,0 +1,12 @@
+.idea
+.mvn
+.quarkus
+.gitignore
+.dockerignore
+.sdkmanrc
+LICENSE.txt
+mvnw*
+README*
+target
+docs
+.env

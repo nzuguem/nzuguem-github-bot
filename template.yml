@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Nzuguem Github Bot on Lambda
+
+Globals:
+  Function:
+    Timeout: 20
+    MemorySize: 256
+
+Resources:
+  NzuguemGithubBotFunctionImage:
+    Type: AWS::Serverless::Function
+    Properties:
+      Policies:
+        - SSMParameterWithSlashPrefixReadPolicy:
+            ParameterName: "/github-app"
+      PackageType: Image
+      # This corresponds to the processor architecture of the machine building the Docker image.
+      # It must match the architecture on lambda
+      # In my case, I'm on a Mac Pro M1
+      Architectures: [arm64]
+      FunctionUrlConfig:
+        AuthType: NONE
+      Environment:
+        Variables:
+          RUST_LOG: debug
+          READINESS_CHECK_PATH: /q/health/ready
+          ASYNC_INIT: true
+          QUARKUS_GITHUB_APP_APP_ID: '{{resolve:ssm:/github-app/id}}'
+          QUARKUS_GITHUB_APP_WEBHOOK_SECRET: '{{resolve:ssm:/github-app/webhook-secret}}'
+          QUARKUS_GITHUB_APP_PRIVATE_KEY: '{{resolve:ssm:/github-app/private-key}}'
+    Metadata:
+      DockerTag: v1
+      DockerContext: ./
+      Dockerfile: Dockerfile
+
+  NzuguemGithubBotFunctionZip:
+    Type: AWS::Serverless::Function
+    Properties:
+      Policies:
+        - SSMParameterWithSlashPrefixReadPolicy:
+            ParameterName: "/github-app"
+      Runtime: java17
+      Handler: run.sh
+      AutoPublishAlias: live
+      SnapStart:
+        ApplyOn: PublishedVersions
+      Layers:
+        - Fn::Sub: arn:aws:lambda:${AWS::Region}:753240598075:layer:LambdaAdapterLayerX86:17
+      FunctionUrlConfig:
+        AuthType: NONE
+      Environment:
+        Variables:
+          RUST_LOG: debug
+          READINESS_CHECK_PATH: /q/health/ready
+          ASYNC_INIT: true
+          AWS_LAMBDA_EXEC_WRAPPER: /opt/bootstrap
+          QUARKUS_GITHUB_APP_APP_ID: '{{resolve:ssm:/github-app/id}}'
+          QUARKUS_GITHUB_APP_WEBHOOK_SECRET: '{{resolve:ssm:/github-app/webhook-secret}}'
+          QUARKUS_GITHUB_APP_PRIVATE_KEY: '{{resolve:ssm:/github-app/private-key}}'
+    Metadata:
+      BuildMethod: makefile
+
+Outputs:
+  FunctionUrlImage:
+    Description: "Function URL of Image based function"
+    Value: !GetAtt NzuguemGithubBotFunctionImageUrl.FunctionUrl
+  FunctionUrlZip:
+    Description: "Function URL of Zip based function"
+    Value: !GetAtt NzuguemGithubBotFunctionZipUrl.FunctionUrl
