@@ -1,4 +1,4 @@
-package me.nzuguem.bot;
+package me.nzuguem.bot.services.hello;
 
 import jakarta.enterprise.context.ApplicationScoped;
 

@@ -1,7 +1,8 @@
-package me.nzuguem.bot;
+package me.nzuguem.bot.handlers;
 
 import io.quarkiverse.githubapp.event.Issue;
 import io.quarkiverse.githubapp.event.IssueComment;
+import me.nzuguem.bot.services.llm.QuarkusGithubAppExtensionDoc;
 import org.jboss.logging.Logger;
 import org.kohsuke.github.*;
 import java.io.IOException;
@@ -9,6 +10,12 @@ import java.io.IOException;
 class IssueEventHandler {
 
     static final Logger LOGGER = Logger.getLogger(IssueEventHandler.class);
+
+    private final QuarkusGithubAppExtensionDoc quarkusGithubAppExtensionDoc;
+
+    IssueEventHandler(QuarkusGithubAppExtensionDoc quarkusGithubAppExtensionDoc) {
+        this.quarkusGithubAppExtensionDoc = quarkusGithubAppExtensionDoc;
+    }
 
     void onIssueOpen(@Issue.Opened
                      GHEventPayload.Issue issuePayload) throws IOException {
@@ -19,6 +26,22 @@ class IssueEventHandler {
 
         issue.addLabels("open");
         issue.createReaction(ReactionContent.HEART);
+
+        try {
+            var comment = this.quarkusGithubAppExtensionDoc.ask(issue.getTitle());
+
+            issue.comment("""
+                    %s
+                    
+                    Source : https://docs.quarkiverse.io/quarkus-github-app/dev/
+                    """.formatted(comment));
+
+        } catch (Exception exception) {
+            LOGGER.warn(exception.getMessage(), exception);
+
+            issue.comment("Thank you for your issue, we'll get back to you shortly.");
+        }
+
     }
 
     void onIssueClosed(@Issue.Closed

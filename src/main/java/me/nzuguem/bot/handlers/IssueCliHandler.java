@@ -1,10 +1,10 @@
-package me.nzuguem.bot;
+package me.nzuguem.bot.handlers;
 
 import com.github.rvesse.airline.annotations.Cli;
 import com.github.rvesse.airline.annotations.Command;
 import io.quarkiverse.githubapp.command.airline.CliOptions;
 import io.quarkiverse.githubapp.command.airline.CommandOptions;
-import jakarta.inject.Inject;
+import me.nzuguem.bot.services.hello.HelloService;
 import org.jboss.logging.Logger;
 import org.kohsuke.github.GHEventPayload;
 
@@ -40,8 +40,11 @@ class IssueCliHandler {
     @Command(name = "hello")
     static class Hello implements Commands {
 
-        @Inject
-        HelloService helloService;
+        private final HelloService helloService;
+
+        Hello(HelloService helloService) {
+            this.helloService = helloService;
+        }
 
         @Override
         public void run(GHEventPayload.IssueComment issueCommentPayload) throws IOException {
