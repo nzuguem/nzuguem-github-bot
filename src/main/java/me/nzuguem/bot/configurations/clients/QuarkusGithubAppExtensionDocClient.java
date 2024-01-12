@@ -1,7 +1,7 @@
 package me.nzuguem.bot.configurations.clients;
 
 import dev.langchain4j.data.document.Document;
-import dev.langchain4j.data.document.Metadata;
+import dev.langchain4j.data.document.source.UrlSource;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -30,7 +30,11 @@ public interface QuarkusGithubAppExtensionDocClient {
 
         var content = includes ? this.getContentOnIncludes(fileName) : this.getContent(fileName);
 
-        return new Document(content, Metadata.metadata("source", "%s/%s".formatted(baseUri, fileName)));
+        var metadata =  UrlSource.from("%s/%s".formatted(baseUri, fileName))
+                .metadata()
+                .add("source", "quarkus-github-app-extension");
+
+        return new Document(content, metadata);
     }
 
     default List<Document>  getContentAsDocument() {
