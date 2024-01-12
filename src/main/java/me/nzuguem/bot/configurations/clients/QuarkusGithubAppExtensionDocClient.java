@@ -22,13 +22,10 @@ public interface QuarkusGithubAppExtensionDocClient {
     @Path("{fileName}")
     String getContent(@PathParam("fileName") String fileName);
 
-    @GET
-    @Path("includes/{fileName}")
-    String getContentOnIncludes(@PathParam("fileName") String fileName);
 
-    default Document getContentAsDocument(String fileName, boolean includes, String baseUri) {
+    default Document getContentAsDocument(String fileName, String baseUri) {
 
-        var content = includes ? this.getContentOnIncludes(fileName) : this.getContent(fileName);
+        var content = this.getContent(fileName);
 
         var metadata =  UrlSource.from("%s/%s".formatted(baseUri, fileName))
                 .metadata()
@@ -43,15 +40,15 @@ public interface QuarkusGithubAppExtensionDocClient {
 
         var baseUri = ConfigProvider.getConfig().getValue("quarkus.rest-client.quarkus-github-app-extension-doc-client.url", String.class);
 
-        documents.add(this.getContentAsDocument("commands.adoc", false, baseUri));
-        documents.add(this.getContentAsDocument("create-github-app.adoc", false, baseUri));
-        documents.add(this.getContentAsDocument("developer-reference.adoc", false, baseUri));
-        documents.add(this.getContentAsDocument("index.adoc", false, baseUri));
-        documents.add(this.getContentAsDocument("push-to-production.adoc", false, baseUri));
-        documents.add(this.getContentAsDocument("register-github-app.adoc", false, baseUri));
-        documents.add(this.getContentAsDocument("replay-ui.adoc", false, baseUri));
-        documents.add(this.getContentAsDocument("testing.adoc", false, baseUri));
-        documents.add(this.getContentAsDocument("quarkus-github-app.adoc", true, baseUri));
+        documents.add(this.getContentAsDocument("commands.adoc", baseUri));
+        documents.add(this.getContentAsDocument("create-github-app.adoc", baseUri));
+        documents.add(this.getContentAsDocument("developer-reference.adoc", baseUri));
+        documents.add(this.getContentAsDocument("index.adoc", baseUri));
+        documents.add(this.getContentAsDocument("push-to-production.adoc", baseUri));
+        documents.add(this.getContentAsDocument("register-github-app.adoc", baseUri));
+        documents.add(this.getContentAsDocument("replay-ui.adoc", baseUri));
+        documents.add(this.getContentAsDocument("testing.adoc", baseUri));
+        documents.add(this.getContentAsDocument("includes/quarkus-github-app.adoc", baseUri));
 
         return documents;
     }
