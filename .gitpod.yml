@@ -1,0 +1,24 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: Build app
+    init: |
+      quarkus build
+  - name: Conf App
+    openMode: split-right
+    command: |
+      echo -e "\\n
+        ⚠️⚠️⚠️ \\n
+        1. Please Register to GitHub App, following this documentation: https://docs.quarkiverse.io/quarkus-github-app/dev/register-github-app.html. \\n
+        2. At the end of step 1, you will need to retrieve the following information:  Github App ID, Github App Webhook Proxy URL, Github App Webhook Secret and Github App Private Key. \\n
+        3. Store this information in Gitpod environment variables (QUARKUS_GITHUB_APP_APP_ID, QUARKUS_GITHUB_APP_WEBHOOK_PROXY_URL, QUARKUS_GITHUB_APP_WEBHOOK_SECRET, QUARKUS_GITHUB_APP_PRIVATE_KEY, OPENAI_API_KEY), so as not to lose it. Be sure to define the scope \\n
+        4. You can start the application 🎉🎉🎉 \\n
+        ⚠️⚠️⚠️
+      "
+
+vscode:
+  extensions:
+    - redhat.java
+    - redhat.vscode-quarkus
+    - mhutchie.git-graph
