@@ -1,5 +1,6 @@
 package me.nzuguem.bot.services.llm;
 
+import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
@@ -13,6 +14,8 @@ public interface QuarkusGithubAppExtensionDoc {
     @SystemMessage("""
             You're an expert at formulating answers for a Github issue.
             """)
-    String ask(@UserMessage String prompt);
-
+    @UserMessage("""
+            Gives an answer to the concern raised by this Github issue title "{title}", including this issue description "{description}"
+            """)
+    String ask(@MemoryId Long memoryId, String title, String description);
 }

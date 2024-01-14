@@ -16,11 +16,9 @@ public class Ingestor {
 
     private final QuarkusGithubAppExtensionDocClient quarkusGithubAppExtensionDocClient;
 
-    // The embedding store (the database)
     private final PgVectorEmbeddingStore embeddingStore;
 
 
-    // The embedding model (how is computed the vector of a document)
     private final EmbeddingModel embeddingModel;
 
     public Ingestor(@RestClient QuarkusGithubAppExtensionDocClient quarkusGithubAppExtensionDocClient,

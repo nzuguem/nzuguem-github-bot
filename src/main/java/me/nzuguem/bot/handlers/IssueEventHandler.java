@@ -28,7 +28,7 @@ class IssueEventHandler {
         issue.createReaction(ReactionContent.HEART);
 
         try {
-            var comment = this.quarkusGithubAppExtensionDoc.ask(issue.getTitle());
+            var comment = this.quarkusGithubAppExtensionDoc.ask(issue.getId(), issue.getTitle(), issue.getBody());
 
             issue.comment("""
                     %s
