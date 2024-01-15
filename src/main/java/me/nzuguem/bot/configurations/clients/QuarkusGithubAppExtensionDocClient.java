@@ -18,6 +18,12 @@ import java.util.List;
 @Produces(MediaType.TEXT_PLAIN)
 public interface QuarkusGithubAppExtensionDocClient {
 
+    List<String> FILE_NAMES = List.of(
+            "commands.adoc", "create-github-app.adoc", "developer-reference.adoc",
+            "index.adoc", "push-to-production.adoc", "register-github-app.adoc",
+            "replay-ui.adoc", "testing.adoc", "includes/quarkus-github-app.adoc"
+    );
+
     @GET
     @Path("{fileName}")
     String getContent(@PathParam("fileName") String fileName);
@@ -40,15 +46,7 @@ public interface QuarkusGithubAppExtensionDocClient {
 
         var baseUri = ConfigProvider.getConfig().getValue("quarkus.rest-client.quarkus-github-app-extension-doc-client.url", String.class);
 
-        documents.add(this.getContentAsDocument("commands.adoc", baseUri));
-        documents.add(this.getContentAsDocument("create-github-app.adoc", baseUri));
-        documents.add(this.getContentAsDocument("developer-reference.adoc", baseUri));
-        documents.add(this.getContentAsDocument("index.adoc", baseUri));
-        documents.add(this.getContentAsDocument("push-to-production.adoc", baseUri));
-        documents.add(this.getContentAsDocument("register-github-app.adoc", baseUri));
-        documents.add(this.getContentAsDocument("replay-ui.adoc", baseUri));
-        documents.add(this.getContentAsDocument("testing.adoc", baseUri));
-        documents.add(this.getContentAsDocument("includes/quarkus-github-app.adoc", baseUri));
+        FILE_NAMES.forEach(fileName -> documents.add(getContentAsDocument(fileName, baseUri)));
 
         return documents;
     }
