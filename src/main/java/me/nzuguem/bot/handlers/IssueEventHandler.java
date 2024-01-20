@@ -6,6 +6,7 @@ import me.nzuguem.bot.services.llm.QuarkusGithubAppExtensionDoc;
 import org.jboss.logging.Logger;
 import org.kohsuke.github.*;
 import java.io.IOException;
+import java.util.Objects;
 
 class IssueEventHandler {
 
@@ -27,21 +28,11 @@ class IssueEventHandler {
         issue.addLabels("open");
         issue.createReaction(ReactionContent.HEART);
 
-        try {
-            var comment = this.quarkusGithubAppExtensionDoc.ask(issue.getId(), issue.getTitle(), issue.getBody());
+        var comment = Objects.isNull(issue.getBody()) ?
+                this.quarkusGithubAppExtensionDoc.ask(issue.getId(), issue.getTitle()) :
+                this.quarkusGithubAppExtensionDoc.ask(issue.getId(), issue.getTitle(), issue.getBody());
 
-            issue.comment("""
-                    %s
-                    
-                    Source : https://docs.quarkiverse.io/quarkus-github-app/dev/
-                    """.formatted(comment));
-
-        } catch (Exception exception) {
-            LOGGER.warn(exception.getMessage(), exception);
-
-            issue.comment("Thank you for your issue, we'll get back to you shortly.");
-        }
-
+        issue.comment(comment);
     }
 
     void onIssueClosed(@Issue.Closed
