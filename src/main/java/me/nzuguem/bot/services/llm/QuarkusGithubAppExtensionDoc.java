@@ -5,12 +5,13 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
 import io.quarkus.logging.Log;
+import me.nzuguem.bot.configurations.llm.RetrieverModel;
 import org.eclipse.microprofile.faulttolerance.ExecutionContext;
 import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.faulttolerance.FallbackHandler;
 
 @RegisterAiService(
-        retrieverSupplier = RegisterAiService.BeanRetrieverSupplier.class
+        retriever = RetrieverModel.class
 )
 public interface QuarkusGithubAppExtensionDoc {
 
