@@ -18,7 +18,7 @@ public class NzuguemBot {
                   \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ \\_/\s
                 """.strip());
 
-        if (LaunchMode.current() != LaunchMode.TEST) {
+        if (LaunchMode.current() == LaunchMode.DEVELOPMENT) {
             LOGGER.info("Ingesting Documents for RAG");
             ingestor.ingest();
         }
