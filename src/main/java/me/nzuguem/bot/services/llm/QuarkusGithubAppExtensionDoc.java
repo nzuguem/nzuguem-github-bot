@@ -5,13 +5,12 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
 import io.quarkus.logging.Log;
+import me.nzuguem.bot.configurations.llm.GithubAppRetrievalAugmentor;
 import org.eclipse.microprofile.faulttolerance.ExecutionContext;
 import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.faulttolerance.FallbackHandler;
 
-@RegisterAiService(
-        retrieverSupplier = RegisterAiService.BeanRetrieverSupplier.class
-)
+@RegisterAiService(retrievalAugmentor = GithubAppRetrievalAugmentor.class)
 public interface QuarkusGithubAppExtensionDoc {
 
     String SYSTEM_MESSAGE = "You're an expert at formulating answers for a Github issue.";
